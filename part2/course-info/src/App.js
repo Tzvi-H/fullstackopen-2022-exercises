@@ -20,16 +20,15 @@ const App = () => {
         exercises: 14,
         id: 3,
       },
+      {
+        name: "Redux",
+        exercises: 11,
+        id: 4,
+      },
     ],
   };
 
   return <Course course={course} />;
 };
-
-// const Total = ({ exercises }) => (
-//   <p>
-//     Number of exercises {exercises.reduce((acc, exercise) => acc + exercise, 0)}
-//   </p>
-// );
 
 export default App;
