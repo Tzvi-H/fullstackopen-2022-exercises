@@ -1,15 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import personServices from "./services/persons";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "123-567890" },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+
+  useEffect(() => {
+    const loadPersons = async () => {
+      const persons = await personServices.getAll();
+      setPersons(persons.data);
+    };
+    loadPersons();
+  }, []);
 
   const personsToShow = persons.filter(({ name }) =>
     name.toLowerCase().startsWith(filter.toLowerCase())
