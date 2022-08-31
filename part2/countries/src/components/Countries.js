@@ -1,12 +1,16 @@
 import CountryBasic from "./CountryBasic";
 import CountryFull from "./CountryFull";
 
-const Countries = ({ countries }) => {
+const Countries = ({ countries, setCountry }) => {
   if (countries.length > 10) {
     return <p>Too many matches, specify another filter</p>;
   } else if (countries.length > 1) {
     return countries.map((country) => (
-      <CountryBasic key={country.name.official} country={country} />
+      <CountryBasic
+        key={country.name.official}
+        country={country}
+        setCountry={setCountry}
+      />
     ));
   } else if (countries.length === 1) {
     return <CountryFull country={countries[0]} />;

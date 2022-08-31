@@ -1,5 +1,10 @@
-const CountryBasic = ({ country }) => {
-  return <p>{country.name.common}</p>;
+const CountryBasic = ({ country, setCountry }) => {
+  return (
+    <p>
+      {country.name.common}{" "}
+      <button onClick={() => setCountry(country)}>show</button>
+    </p>
+  );
 };
 
 export default CountryBasic;
