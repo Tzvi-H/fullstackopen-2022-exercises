@@ -40,6 +40,15 @@ const App = () => {
     setNewNumber("");
   };
 
+  const handleDeletePerson = async (person) => {
+    if (window.confirm(`Delete ${person.name}?`)) {
+      await personServices.remove(person.id);
+      const removedId = person.id;
+      setPersons(persons.filter((person) => person.id !== removedId));
+      alert("successfully removed");
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -60,7 +69,10 @@ const App = () => {
 
       <h2>Numbers</h2>
 
-      <Persons personsToShow={personsToShow} />
+      <Persons
+        personsToShow={personsToShow}
+        handleDeletePerson={handleDeletePerson}
+      />
     </div>
   );
 };

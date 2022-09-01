@@ -12,6 +12,11 @@ const create = async (newPerson) => {
   return response.data;
 };
 
-const personServices = { getAll, create };
+const remove = async (personId) => {
+  const response = await axios.delete(`${baseUrl}/${personId}`);
+  return response.data;
+};
+
+const personServices = { getAll, create, remove };
 
 export default personServices;
