@@ -13,7 +13,7 @@ const App = () => {
   useEffect(() => {
     const loadPersons = async () => {
       const persons = await personServices.getAll();
-      setPersons(persons.data);
+      setPersons(persons);
     };
     loadPersons();
   }, []);
@@ -22,7 +22,7 @@ const App = () => {
     name.toLowerCase().startsWith(filter.toLowerCase())
   );
 
-  const handlePersonFormSubmit = (event) => {
+  const handlePersonFormSubmit = async (event) => {
     event.preventDefault();
 
     if (persons.find((person) => person.name === newName)) {
@@ -30,7 +30,11 @@ const App = () => {
       return;
     }
 
-    const newPerson = { name: newName, number: newNumber };
+    const newPerson = await personServices.create({
+      name: newName,
+      number: newNumber,
+    });
+    console.log(newPerson);
     setPersons([...persons, newPerson]);
     setNewName("");
     setNewNumber("");
