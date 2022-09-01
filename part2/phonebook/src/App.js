@@ -25,8 +25,22 @@ const App = () => {
   const handlePersonFormSubmit = async (event) => {
     event.preventDefault();
 
-    if (persons.find((person) => person.name === newName)) {
-      alert(`${newName} already exists in the phonebook`);
+    const person = persons.find((person) => person.name === newName);
+    if (person) {
+      if (
+        window.confirm(
+          `${newName} is already added to the phonebook, replace the old phone number with a new one?`
+        )
+      ) {
+        const newPerson = { ...person, number: newNumber };
+        const updatedPerson = await personServices.update(newPerson);
+        setPersons(
+          persons.map((person) =>
+            person.id !== updatedPerson.id ? person : updatedPerson
+          )
+        );
+        alert("successfully updated phone number");
+      }
       return;
     }
 
