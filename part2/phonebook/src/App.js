@@ -35,19 +35,29 @@ const App = () => {
         )
       ) {
         const newPerson = { ...person, number: newNumber };
-        const updatedPerson = await personServices.update(newPerson);
-        setPersons(
-          persons.map((person) =>
-            person.id !== updatedPerson.id ? person : updatedPerson
-          )
-        );
-        setNotification({
-          class: "success",
-          text: `successfully updated phone number`,
-        });
-        setTimeout(() => {
-          setNotification(null);
-        }, 3000);
+        try {
+          const updatedPerson = await personServices.update(newPerson);
+          setPersons(
+            persons.map((person) =>
+              person.id !== updatedPerson.id ? person : updatedPerson
+            )
+          );
+          setNotification({
+            class: "success",
+            text: `successfully updated phone number`,
+          });
+          setTimeout(() => {
+            setNotification(null);
+          }, 3000);
+        } catch (error) {
+          setNotification({
+            class: "error",
+            text: `information on ${person.name} has already been removed from the server`,
+          });
+          setTimeout(() => {
+            setNotification(null);
+          }, 3000);
+        }
       }
       return;
     }
