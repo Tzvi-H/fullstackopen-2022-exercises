@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
 import personServices from "./services/persons";
 
 const App = () => {
@@ -9,6 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     const loadPersons = async () => {
@@ -39,7 +41,13 @@ const App = () => {
             person.id !== updatedPerson.id ? person : updatedPerson
           )
         );
-        alert("successfully updated phone number");
+        setNotification({
+          class: "success",
+          text: `successfully updated phone number`,
+        });
+        setTimeout(() => {
+          setNotification(null);
+        }, 3000);
       }
       return;
     }
@@ -48,10 +56,13 @@ const App = () => {
       name: newName,
       number: newNumber,
     });
-    console.log(newPerson);
     setPersons([...persons, newPerson]);
     setNewName("");
     setNewNumber("");
+    setNotification({ class: "success", text: `added ${newPerson.name}` });
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000);
   };
 
   const handleDeletePerson = async (person) => {
@@ -65,6 +76,8 @@ const App = () => {
 
   return (
     <div>
+      <Notification notification={notification} />
+
       <h2>Phonebook</h2>
 
       <Filter setFilter={setFilter} filter={filter} />
