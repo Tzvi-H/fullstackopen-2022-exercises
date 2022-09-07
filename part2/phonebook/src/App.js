@@ -65,10 +65,18 @@ const App = () => {
       return;
     }
 
-    const newPerson = await personServices.create({
-      name: newName,
-      number: newNumber,
-    });
+    const newPerson = await personServices
+      .create({
+        name: newName,
+        number: newNumber,
+      })
+      .catch((error) => {
+        console.log("line 74");
+        setNotification({ class: "error", text: error.response.data.error });
+        setTimeout(() => {
+          setNotification(null);
+        }, 3000);
+      });
     setPersons([...persons, newPerson]);
     setNewName("");
     setNewNumber("");
