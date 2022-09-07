@@ -49,6 +49,8 @@ const App = () => {
           setTimeout(() => {
             setNotification(null);
           }, 3000);
+          setNewName("");
+          setNewNumber("");
         } catch (error) {
           setNotification({
             class: "error",
