@@ -65,25 +65,27 @@ const App = () => {
       return;
     }
 
-    const newPerson = await personServices
+    personServices
       .create({
         name: newName,
         number: newNumber,
       })
+      .then((newPerson) => {
+        setPersons([...persons, newPerson]);
+        setNewName("");
+        setNewNumber("");
+        setNotification({ class: "success", text: `added ${newPerson.name}` });
+        setTimeout(() => {
+          setNotification(null);
+        }, 3000);
+      })
       .catch((error) => {
-        console.log("line 74");
         setNotification({ class: "error", text: error.response.data.error });
         setTimeout(() => {
           setNotification(null);
         }, 3000);
+        return;
       });
-    setPersons([...persons, newPerson]);
-    setNewName("");
-    setNewNumber("");
-    setNotification({ class: "success", text: `added ${newPerson.name}` });
-    setTimeout(() => {
-      setNotification(null);
-    }, 3000);
   };
 
   const handleDeletePerson = async (person) => {
