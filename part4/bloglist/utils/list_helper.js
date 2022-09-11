@@ -8,7 +8,18 @@ const totalLikes = (blogs) => {
   }, 0);
 };
 
+const favoriteBlog = (blogs) => {
+  let blog = blogs[0];
+  blogs.forEach((currentBlog) => {
+    if (currentBlog.likes > blog.likes) {
+      blog = currentBlog;
+    }
+  });
+  return blog;
+};
+
 module.exports = {
   dummy,
   totalLikes,
+  favoriteBlog,
 };
