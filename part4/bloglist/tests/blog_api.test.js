@@ -68,6 +68,26 @@ test("a valid blog can be added", async () => {
   expect(contents).toContain("title 3");
 });
 
+test("'likes' will default to 0 when 'likes' is missing from POST request", async () => {
+  const newBlog = {
+    title: "title 3",
+    author: "author 3",
+    url: "url3.com",
+  };
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  const response = await api.get("/api/blogs");
+
+  const blog = response.body.find((blog) => blog.title === "title 3");
+
+  expect(blog.likes).toBe(0);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });

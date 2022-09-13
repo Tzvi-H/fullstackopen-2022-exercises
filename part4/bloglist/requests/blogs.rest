@@ -11,6 +11,5 @@ Content-Type: application/json
 {
   "title": "title 1",
   "author": "author 1",
-  "url": "url 1",
-  "likes": 0
+  "url": "url 1"
 }
