@@ -17,6 +17,15 @@ blogsRouter.post("/", async (request, response) => {
   response.status(201).json(result);
 });
 
+blogsRouter.delete("/:id", async (request, response) => {
+  const blog = await Blog.findByIdAndDelete(request.params.id);
+  if (blog) {
+    response.status(204).end();
+  } else {
+    response.status(404).end();
+  }
+});
+
 // notesRouter.delete('/:id', (request, response, next) => {
 //   Note.findByIdAndRemove(request.params.id)
 //     .then(() => {
