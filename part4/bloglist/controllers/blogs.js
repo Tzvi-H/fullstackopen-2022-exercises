@@ -6,6 +6,11 @@ blogsRouter.get("/", async (request, response) => {
   response.json(blogs);
 });
 
+blogsRouter.get("/:id", async (request, response) => {
+  const blog = await Blog.findById(request.params.id);
+  response.json(blog);
+});
+
 blogsRouter.post("/", async (request, response) => {
   if (!request.body.url && !request.body.title) {
     return response.status(400).json({
@@ -21,6 +26,19 @@ blogsRouter.delete("/:id", async (request, response) => {
   const blog = await Blog.findByIdAndDelete(request.params.id);
   if (blog) {
     response.status(204).end();
+  } else {
+    response.status(404).end();
+  }
+});
+
+blogsRouter.put("/:id", async (request, response) => {
+  const blog = await Blog.findByIdAndUpdate(
+    request.params.id,
+    { likes: request.body.likes },
+    { new: true }
+  );
+  if (blog) {
+    response.json(blog);
   } else {
     response.status(404).end();
   }

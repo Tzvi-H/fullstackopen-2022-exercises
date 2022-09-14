@@ -116,6 +116,23 @@ test("deletion of a note succeeds with status code 204 if id is valid", async ()
   expect(contents).not.toContain(blogToDelete.title);
 });
 
+test("updating a note succeeds", async () => {
+  const blogs = await Blog.find({});
+  const blogToUpdate = blogs[0];
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send({ likes: 10 })
+    .expect(200);
+
+  const response = await api.get("/api/blogs");
+
+  expect(response.body).toHaveLength(initialBlogs.length);
+
+  const blog = await api.get(`/api/blogs/${blogToUpdate.id}`);
+
+  expect(blog.body.likes).toBe(10);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
