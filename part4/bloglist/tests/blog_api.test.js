@@ -4,6 +4,8 @@ const app = require("../app");
 const api = supertest(app);
 const Blog = require("../models/blog");
 
+jest.setTimeout(10000);
+
 const initialBlogs = [
   {
     title: "title 1",
@@ -86,6 +88,18 @@ test("'likes' will default to 0 when 'likes' is missing from POST request", asyn
   const blog = response.body.find((blog) => blog.title === "title 3");
 
   expect(blog.likes).toBe(0);
+});
+
+test("blog without content are url is not added", async () => {
+  const newBlog = {
+    author: "author 3",
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(400);
+
+  const response = await api.get("/api/blogs");
+
+  expect(response.body).toHaveLength(initialBlogs.length);
 });
 
 afterAll(() => {
