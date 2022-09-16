@@ -1,6 +1,16 @@
 const blogsRouter = require("express").Router();
 const Blog = require("../models/blog");
 const User = require("../models/user");
+const jwt = require("jsonwebtoken");
+const { SECRET } = require("../utils/config");
+
+const getTokenFrom = (request) => {
+  const authorization = request.get("authorization");
+  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
+    return authorization.substring(7);
+  }
+  return null;
+};
 
 blogsRouter.get("/", async (request, response) => {
   const blogs = await Blog.find({}).populate("user", {
@@ -26,8 +36,17 @@ blogsRouter.post("/", async (request, response) => {
       error: "url or title is missing",
     });
   }
+
+  const token = getTokenFrom(request);
+  if (!token) {
+    return response.status(401).json({ error: "token missing or invalid" });
+  }
+  const decodedToken = jwt.verify(token, SECRET);
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: "token missing or invalid" });
+  }
   const blog = new Blog(request.body);
-  const user = await User.findOne({});
+  const user = await User.findById(decodedToken.id);
   blog.user = user._id;
   const result = await blog.save();
   user.blogs = user.blogs.concat(result._id);
