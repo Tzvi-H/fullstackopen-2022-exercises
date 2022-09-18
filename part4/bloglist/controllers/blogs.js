@@ -1,8 +1,6 @@
 const blogsRouter = require("express").Router();
 const Blog = require("../models/blog");
-const User = require("../models/user");
-const jwt = require("jsonwebtoken");
-const { SECRET } = require("../utils/config");
+const middleware = require("../utils/middleware");
 
 blogsRouter.get("/", async (request, response) => {
   const blogs = await Blog.find({}).populate("user", {
@@ -22,53 +20,50 @@ blogsRouter.get("/:id", async (request, response) => {
   response.json(blog);
 });
 
-blogsRouter.post("/", async (request, response) => {
-  if (!request.body.url && !request.body.title) {
-    return response.status(400).json({
-      error: "url or title is missing",
-    });
-  }
+blogsRouter.post(
+  "/",
+  middleware.tokenExtractor,
+  middleware.userExtractor,
+  async (request, response) => {
+    if (!request.body.url && !request.body.title) {
+      return response.status(400).json({
+        error: "url or title is missing",
+      });
+    }
 
-  const token = request.token;
-  if (!token) {
-    return response.status(401).json({ error: "token missing or invalid" });
-  }
-  const decodedToken = jwt.verify(token, SECRET);
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: "token missing or invalid" });
-  }
-  const blog = new Blog(request.body);
-  const user = await User.findById(decodedToken.id);
-  blog.user = user._id;
-  const result = await blog.save();
-  user.blogs = user.blogs.concat(result._id);
-  await user.save();
-  response.status(201).json(result);
-});
+    const blog = new Blog(request.body);
+    const user = req.user;
 
-blogsRouter.delete("/:id", async (request, response) => {
-  const blog = await Blog.findById(request.params.id);
-  if (!blog) {
-    return response.status(404).end();
-  }
+    blog.user = user._id;
 
-  const token = request.token;
-  if (!token) {
-    return response.status(401).json({ error: "token missing or invalid" });
+    const result = await blog.save();
+    user.blogs = user.blogs.concat(result._id);
+    await user.save();
+    response.status(201).json(result);
   }
+);
 
-  const decodedToken = jwt.verify(token, SECRET);
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: "token missing or invalid" });
-  }
+blogsRouter.delete(
+  "/:id",
+  middleware.tokenExtractor,
+  middleware.userExtractor,
+  async (request, response) => {
+    const blog = await Blog.findById(request.params.id);
+    if (!blog) {
+      return response.status(404).end();
+    }
 
-  if (decodedToken.id === blog.user.toString()) {
-    await blog.delete();
-    return response.status(204).end();
-  } else {
-    return response.status(401).json({ error: "unauthorized" });
+    const loggedInUserId = request.token.id;
+    const blogCreatorId = blog.user.toString();
+
+    if (loggedInUserId === blogCreatorId) {
+      await blog.delete();
+      return response.status(204).end();
+    } else {
+      return response.status(401).json({ error: "unauthorized" });
+    }
   }
-});
+);
 
 blogsRouter.put("/:id", async (request, response) => {
   const blog = await Blog.findByIdAndUpdate(
