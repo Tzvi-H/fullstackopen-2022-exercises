@@ -32,7 +32,7 @@ blogsRouter.post(
     }
 
     const blog = new Blog(request.body);
-    const user = req.user;
+    const user = request.user;
 
     blog.user = user._id;
 
