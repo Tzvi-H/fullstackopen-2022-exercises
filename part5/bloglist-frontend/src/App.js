@@ -26,6 +26,7 @@ const App = () => {
         username,
         password,
       });
+      blogService.setToken(user.token);
       setUser(user);
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
     } catch (exception) {
@@ -36,6 +37,7 @@ const App = () => {
   const handleLogOut = () => {
     setUser(null);
     window.localStorage.removeItem("loggedBlogappUser");
+    blogService.setToken(null);
   };
 
   if (user === null) {
