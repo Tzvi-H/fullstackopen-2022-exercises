@@ -80,6 +80,25 @@ const App = () => {
     }
   };
 
+  const handleLikeBlog = async (blogId, newBlog) => {
+    try {
+      const updatedBlog = await blogService.update(blogId, newBlog);
+      setBlogs(blogs.map((blog) => (blog.id !== blogId ? blog : updatedBlog)));
+      setNotification({
+        type: "success",
+        message: `successfully liked "${updatedBlog.title}"`,
+      });
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+    } catch (error) {
+      setNotification({ type: "error", message: error.response.data.error });
+      setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+    }
+  };
+
   if (user === null) {
     return (
       <div>
@@ -104,7 +123,7 @@ const App = () => {
       </Togglable>
 
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleLikeBlog={handleLikeBlog} />
       ))}
     </div>
   );
