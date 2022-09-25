@@ -31,7 +31,7 @@ const Blog = ({
   const buttonText = showDetails ? "hide" : "view";
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blog">
       {blog.title}: {blog.author}{" "}
       <button onClick={() => setShowDetails(!showDetails)}>{buttonText}</button>
       <div style={showWhenVisible}>
