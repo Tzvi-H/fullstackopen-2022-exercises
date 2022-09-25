@@ -32,7 +32,7 @@ const Blog = ({
 
   return (
     <div style={blogStyle}>
-      {blog.title}{" "}
+      {blog.title}: {blog.author}{" "}
       <button onClick={() => setShowDetails(!showDetails)}>{buttonText}</button>
       <div style={showWhenVisible}>
         {blog.url}
@@ -40,7 +40,7 @@ const Blog = ({
         likes {blog.likes}{" "}
         <button onClick={handleCreateButtonClick}>like</button>
         <br />
-        {blog.author}
+        {blog.user.username}
         <br />
         {creatorIsLoggedIn && (
           <button onClick={handleDeleteButtonClick}>remove</button>
