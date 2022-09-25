@@ -99,6 +99,10 @@ const App = () => {
     }
   };
 
+  const blogsSortedByLikes = blogs.sort(
+    (blogA, blogB) => blogB.likes - blogA.likes
+  );
+
   if (user === null) {
     return (
       <div>
@@ -122,7 +126,7 @@ const App = () => {
         <CreateBlog handleCreateBlog={handleCreateBlog} />
       </Togglable>
 
-      {blogs.map((blog) => (
+      {blogsSortedByLikes.map((blog) => (
         <Blog key={blog.id} blog={blog} handleLikeBlog={handleLikeBlog} />
       ))}
     </div>
