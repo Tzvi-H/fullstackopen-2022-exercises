@@ -34,7 +34,7 @@ const Blog = ({
     <div style={blogStyle} className="blog">
       {blog.title}: {blog.author}{" "}
       <button onClick={() => setShowDetails(!showDetails)}>{buttonText}</button>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className="togglable-info">
         {blog.url}
         <br />
         likes {blog.likes}{" "}
