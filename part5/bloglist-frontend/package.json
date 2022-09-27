@@ -16,7 +16,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cypress:open": "cypress open"
   },
   "eslintConfig": {
     "extends": [
@@ -39,6 +40,7 @@
   "proxy": "http://localhost:3003",
   "devDependencies": {
     "@testing-library/user-event": "^14.4.3",
+    "cypress": "^9.6.0",
     "jest-watch-typeahead": "^0.6.5"
   }
 }
