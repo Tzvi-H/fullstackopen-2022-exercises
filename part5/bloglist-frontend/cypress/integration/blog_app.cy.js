@@ -52,5 +52,40 @@ describe("Blog app", function () {
 
       cy.contains("cypress title: cypress author");
     });
+
+    describe("and several blogs exist", function () {
+      beforeEach(function () {
+        cy.contains("new note").click();
+        cy.get("#title-input").type("cypress title 1");
+        cy.get("#author-input").type("cypress author 1");
+        cy.get("#url-input").type("cypress url 1");
+        cy.get("#submit-button").click();
+
+        cy.contains("new note").click();
+        cy.get("#title-input").type("cypress title 2");
+        cy.get("#author-input").type("cypress author 2");
+        cy.get("#url-input").type("cypress url 2");
+        cy.get("#submit-button").click();
+
+        cy.contains("new note").click();
+        cy.get("#title-input").type("cypress title 3");
+        cy.get("#author-input").type("cypress author 3");
+        cy.get("#url-input").type("cypress url 3");
+        cy.get("#submit-button").click();
+      });
+
+      it("one of those can be liked", function () {
+        cy.contains("cypress title 1: cypress author 1")
+          .contains("view")
+          .click();
+
+        cy.contains("like").click();
+
+        cy.contains("cypress title 1: cypress author 1").contains("likes 1");
+
+        // cy.contains('second note')
+        //   .contains('make not important')
+      });
+    });
   });
 });
