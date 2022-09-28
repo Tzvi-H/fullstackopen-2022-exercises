@@ -84,7 +84,7 @@ describe("Blog app", function () {
         cy.contains("cypress title 1: cypress author 1").contains("likes 1");
       });
 
-      it.only("one of those can be deleted", function () {
+      it("one of those can be deleted", function () {
         cy.visit("http://localhost:3000");
 
         cy.contains("cypress title 1: cypress author 1")
@@ -95,6 +95,29 @@ describe("Blog app", function () {
 
         cy.contains("cypress title 1: cypress author 1").should("not.exist");
         cy.contains("cypress title 2: cypress author 2").should("exist");
+      });
+
+      it.only("blogs are ordered in descending order by likes", function () {
+        cy.contains("cypress title 1: cypress author 1")
+          .contains("view")
+          .click();
+        cy.contains("cypress title 1: cypress author 1")
+          .contains("like")
+          .click();
+
+        cy.contains("cypress title 2: cypress author 2")
+          .contains("view")
+          .click();
+        cy.contains("cypress title 2: cypress author 2")
+          .contains("like")
+          .click();
+
+        cy.contains("cypress title 2: cypress author 2").click();
+        cy.contains("cypress title 2: cypress author 2")
+          .contains("like")
+          .click();
+
+        cy.visit("http://localhost:3000");
       });
     });
   });
