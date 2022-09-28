@@ -82,9 +82,19 @@ describe("Blog app", function () {
         cy.contains("like").click();
 
         cy.contains("cypress title 1: cypress author 1").contains("likes 1");
+      });
 
-        // cy.contains('second note')
-        //   .contains('make not important')
+      it.only("one of those can be deleted", function () {
+        cy.visit("http://localhost:3000");
+
+        cy.contains("cypress title 1: cypress author 1")
+          .contains("view")
+          .click();
+
+        cy.contains("remove").click();
+
+        cy.contains("cypress title 1: cypress author 1").should("not.exist");
+        cy.contains("cypress title 2: cypress author 2").should("exist");
       });
     });
   });
