@@ -118,6 +118,13 @@ describe("Blog app", function () {
           .click();
 
         cy.visit("http://localhost:3000");
+
+        cy.get(".blog")
+          .eq(0)
+          .should("contain", "cypress title 2: cypress author 2");
+        cy.get(".blog")
+          .eq(1)
+          .should("contain", "cypress title 1: cypress author 1");
       });
     });
   });
