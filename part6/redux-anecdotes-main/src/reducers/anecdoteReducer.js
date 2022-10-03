@@ -3,12 +3,13 @@ const reducer = (state = [], action) => {
     case "SET_ANECDOTES":
       return action.data;
     case "VOTE":
-      const anecdote = state.find((a) => a.id === action.data.id);
-      const newAnecdote = { ...anecdote, votes: anecdote.votes + 1 };
-      return state.map((a) => (a.id !== action.data.id ? a : newAnecdote));
+      // const anecdote = state.find((a) => a.id === action.data.id);
+      // const newAnecdote = { ...anecdote, votes: anecdote.votes + 1 };
+      // return state.map((a) => (a.id !== action.data.id ? a : newAnecdote));
+      break;
     case "CREATE":
-      const newNote = action.data;
-      return [...state, newNote];
+      const newAnecdote = action.data;
+      return [...state, newAnecdote];
     default:
       return state;
   }
@@ -23,14 +24,10 @@ export const voteForAnecdote = (id) => {
   };
 };
 
-export const createAnecdote = (content) => {
+export const createAnecdote = (anecdote) => {
   return {
     type: "CREATE",
-    data: {
-      content,
-      id: null,
-      votes: 0,
-    },
+    data: anecdote,
   };
 };
 
