@@ -96,6 +96,10 @@ const CreateNew = (props) => {
       info,
       votes: 0,
     });
+    props.setNotification(`a new anecdote "${content}" created!`);
+    setTimeout(() => {
+      props.setNotification("");
+    }, 3000);
     setAuthor("");
     setContent("");
     setInfo("");
@@ -157,27 +161,24 @@ const App = () => {
   const [notification, setNotification] = useState("");
 
   const match = useMatch("/anecdotes/:id");
-  const anecdote = match
-    ? anecdotes.find((anecdote) => anecdote.id === Number(match.params.id))
-    : null;
+  const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
+  const anecdote = match ? anecdoteById(Number(match.params.id)) : null;
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000);
     setAnecdotes(anecdotes.concat(anecdote));
   };
 
-  const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
+  // const vote = (id) => {
+  //   const anecdote = anecdoteById(id);
 
-  const vote = (id) => {
-    const anecdote = anecdoteById(id);
+  //   const voted = {
+  //     ...anecdote,
+  //     votes: anecdote.votes + 1,
+  //   };
 
-    const voted = {
-      ...anecdote,
-      votes: anecdote.votes + 1,
-    };
-
-    setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
-  };
+  //   setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
+  // };
 
   return (
     <div>
@@ -185,12 +186,19 @@ const App = () => {
 
       <Menu />
 
+      {notification && <p>{notification}</p>}
+
       <Routes>
         <Route
           path="/anecdotes/:id"
           element={<Anecdote anecdote={anecdote} />}
         />
-        <Route path="/create" element={<CreateNew addNew={addNew} />} />
+        <Route
+          path="/create"
+          element={
+            <CreateNew addNew={addNew} setNotification={setNotification} />
+          }
+        />
         <Route path="/about" element={<About />} />
         <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
       </Routes>
