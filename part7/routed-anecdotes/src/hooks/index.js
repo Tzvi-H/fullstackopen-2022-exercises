@@ -7,7 +7,7 @@ export const useField = (type) => {
     setValue(event.target.value);
   };
 
-  const reset = () => {
+  const resetfield = () => {
     setValue("");
   };
 
@@ -15,6 +15,6 @@ export const useField = (type) => {
     type,
     value,
     onChange,
-    reset,
+    resetfield,
   };
 };

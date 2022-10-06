@@ -92,9 +92,9 @@ const CreateNew = (props) => {
 
   const resetFields = (event) => {
     event.preventDefault();
-    author.reset();
-    content.reset();
-    info.reset();
+    author.resetfield();
+    content.resetfield();
+    info.resetfield();
   };
 
   const handleSubmit = (e) => {
@@ -105,13 +105,13 @@ const CreateNew = (props) => {
       info: info.value,
       votes: 0,
     });
-    props.setNotification(`a new anecdote "${content}" created!`);
+    props.setNotification(`a new anecdote "${content.value}" created!`);
     setTimeout(() => {
       props.setNotification("");
     }, 3000);
-    author.reset();
-    content.reset();
-    info.reset();
+    author.resetfield();
+    content.resetfield();
+    info.resetfield();
     navigate("/");
   };
 
