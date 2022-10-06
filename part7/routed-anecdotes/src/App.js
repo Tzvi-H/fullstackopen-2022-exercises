@@ -90,6 +90,13 @@ const CreateNew = (props) => {
 
   const navigate = useNavigate();
 
+  const resetFields = (event) => {
+    event.preventDefault();
+    author.reset();
+    content.reset();
+    info.reset();
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     props.addNew({
@@ -133,6 +140,7 @@ const CreateNew = (props) => {
           <input value={info.value} onChange={info.onChange} name="info" />
         </div>
         <button>create</button>
+        <button onClick={resetFields}>reset</button>
       </form>
     </div>
   );
