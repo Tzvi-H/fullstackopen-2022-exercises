@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
 
 import Blog from "./components/Blog";
 import Login from "./components/Login";
@@ -9,12 +10,18 @@ import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
+import {
+  setNotification,
+  removeNotification,
+} from "./reducers/notificationReducer";
+
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState(null);
 
   const blogFormRef = useRef();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -30,93 +37,42 @@ const App = () => {
   }, []);
 
   const handleLogin = async (username, password) => {
-    try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
-      blogService.setToken(user.token);
-      setUser(user);
-      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
-      setNotification({ type: "success", message: "successfully logged in" });
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-    } catch (exception) {
-      setNotification({ type: "error", message: "wrong username or password" });
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-    }
+    const user = await loginService.login({
+      username,
+      password,
+    });
+    blogService.setToken(user.token);
+    setUser(user);
+    window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
   };
 
   const handleLogOut = () => {
     setUser(null);
     window.localStorage.removeItem("loggedBlogappUser");
     blogService.setToken(null);
-    setNotification({ type: "success", message: "successfully logged out" });
+    dispatch(
+      setNotification({ type: "success", message: "successfully logged out" })
+    );
     setTimeout(() => {
-      setNotification(null);
+      dispatch(removeNotification());
     }, 3000);
   };
 
   const handleCreateBlog = async (blogObject) => {
-    try {
-      const savedBlog = await blogService.create(blogObject);
-      setBlogs([...blogs, savedBlog]);
-      setNotification({
-        type: "success",
-        message: `a new blog "${savedBlog.title}" by ${savedBlog.author} added`,
-      });
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-      blogFormRef.current.toggleVisibility();
-    } catch (error) {
-      setNotification({ type: "error", message: error.response.data.error });
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-    }
+    const savedBlog = await blogService.create(blogObject);
+    setBlogs([...blogs, savedBlog]);
+    blogFormRef.current.toggleVisibility();
   };
 
   const handleLikeBlog = async (blogId, newBlog) => {
-    try {
-      const updatedBlog = await blogService.update(blogId, newBlog);
-      setBlogs(blogs.map((blog) => (blog.id !== blogId ? blog : updatedBlog)));
-      setNotification({
-        type: "success",
-        message: `successfully liked "${updatedBlog.title}"`,
-      });
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-    } catch (error) {
-      setNotification({ type: "error", message: error.response.data.error });
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-    }
+    const updatedBlog = await blogService.update(blogId, newBlog);
+    setBlogs(blogs.map((blog) => (blog.id !== blogId ? blog : updatedBlog)));
   };
 
   const handleDeleteBlog = async (blog) => {
     const blogId = blog.id;
-    try {
-      await blogService.remove(blogId);
-      setBlogs(blogs.filter((blog) => blog.id !== blogId));
-      setNotification({
-        type: "success",
-        message: `successfully deleted "${blog.title}"`,
-      });
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-    } catch (error) {
-      setNotification({ type: "error", message: error.response.data.error });
-      setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-    }
+    await blogService.remove(blogId);
+    setBlogs(blogs.filter((blog) => blog.id !== blogId));
   };
 
   const blogsSortedByLikes = blogs.sort(
@@ -126,14 +82,14 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        <Notification notification={notification} />
+        <Notification />
         <Login handleLogin={handleLogin} />
       </div>
     );
   }
   return (
     <div>
-      <Notification notification={notification} />
+      <Notification />
 
       <h2>blogs</h2>
 

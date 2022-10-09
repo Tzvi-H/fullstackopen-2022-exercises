@@ -1,18 +1,44 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+
+import {
+  setNotification,
+  removeNotification,
+} from "../reducers/notificationReducer";
 
 const CreateBlog = ({ handleCreateBlog }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
 
+  const dispatch = useDispatch();
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    handleCreateBlog({ title, author, url });
+    try {
+      handleCreateBlog({ title, author, url });
 
-    setTitle("");
-    setAuthor("");
-    setUrl("");
+      setTitle("");
+      setAuthor("");
+      setUrl("");
+      dispatch(
+        setNotification({
+          type: "success",
+          message: `a new blog "${title}" by ${author} added`,
+        })
+      );
+      setTimeout(() => {
+        dispatch(removeNotification());
+      }, 3000);
+    } catch (error) {
+      dispatch(
+        setNotification({ type: "error", message: error.response.data.error })
+      );
+      setTimeout(() => {
+        dispatch(removeNotification());
+      }, 3000);
+    }
   };
 
   return (

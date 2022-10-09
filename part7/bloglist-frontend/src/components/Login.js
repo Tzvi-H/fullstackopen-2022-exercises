@@ -1,14 +1,40 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+
+import {
+  setNotification,
+  removeNotification,
+} from "../reducers/notificationReducer";
 
 const Login = ({ handleLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const dispatch = useDispatch();
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    handleLogin(username, password);
-    setUsername("");
-    setPassword("");
+    try {
+      handleLogin(username, password);
+      setUsername("");
+      setPassword("");
+      dispatch(
+        setNotification({ type: "success", message: "successfully logged in" })
+      );
+      setTimeout(() => {
+        dispatch(removeNotification());
+      }, 3000);
+    } catch (error) {
+      dispatch(
+        setNotification({
+          type: "error",
+          message: "wrong username or password",
+        })
+      );
+      setTimeout(() => {
+        dispatch(removeNotification());
+      }, 3000);
+    }
   };
 
   return (
