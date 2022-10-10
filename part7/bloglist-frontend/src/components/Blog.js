@@ -1,6 +1,8 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 
+import { updateblog, deleteBlog } from "../reducers/blogReducer";
+
 import { useDispatch } from "react-redux";
 
 import {
@@ -8,12 +10,7 @@ import {
   removeNotification,
 } from "../reducers/notificationReducer";
 
-const Blog = ({
-  blog,
-  handleLikeBlog,
-  handleDeleteBlog,
-  creatorIsLoggedIn,
-}) => {
+const Blog = ({ blog, creatorIsLoggedIn }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const dispatch = useDispatch();
@@ -30,17 +27,9 @@ const Blog = ({
 
   const handleCreateButtonClick = () => {
     try {
-      handleLikeBlog(blog.id, { likes: blog.likes + 1 });
-      dispatch(
-        setNotification({
-          type: "success",
-          message: `successfully liked "${blog.title}"`,
-        })
-      );
-      setTimeout(() => {
-        dispatch(removeNotification());
-      }, 3000);
+      dispatch(updateblog(blog.id, { likes: blog.likes + 1 }));
     } catch (error) {
+      console.log(error);
       setNotification({ type: "error", message: error.response.data.error });
       setTimeout(() => {
         dispatch(removeNotification());
@@ -49,9 +38,12 @@ const Blog = ({
   };
 
   const handleDeleteButtonClick = () => {
+    if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      return;
+    }
+
     try {
-      window.confirm(`Remove blog ${blog.title} by ${blog.author}?`) &&
-        handleDeleteBlog(blog);
+      dispatch(deleteBlog(blog.id));
       dispatch(
         setNotification({
           type: "success",

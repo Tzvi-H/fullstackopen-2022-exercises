@@ -15,7 +15,7 @@ import {
   removeNotification,
 } from "./reducers/notificationReducer";
 
-import { initializeBlogs, createBlog } from "./reducers/blogReducer";
+import { initializeBlogs } from "./reducers/blogReducer";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -61,22 +61,6 @@ const App = () => {
     }, 3000);
   };
 
-  const handleCreateBlog = async (blogObject) => {
-    dispatch(createBlog(blogObject));
-    blogFormRef.current.toggleVisibility();
-  };
-
-  const handleLikeBlog = async (blogId, newBlog) => {
-    // const updatedBlog = await blogService.update(blogId, newBlog);
-    // setBlogs(blogs.map((blog) => (blog.id !== blogId ? blog : updatedBlog)));
-  };
-
-  const handleDeleteBlog = async (blog) => {
-    // const blogId = blog.id;
-    // await blogService.remove(blogId);
-    // setBlogs(blogs.filter((blog) => blog.id !== blogId));
-  };
-
   const blogsSortedByLikes = blogs.sort(
     (blogA, blogB) => blogB.likes - blogA.likes
   );
@@ -100,15 +84,13 @@ const App = () => {
       </p>
 
       <Togglable buttonLabel="new note" ref={blogFormRef}>
-        <CreateBlog handleCreateBlog={handleCreateBlog} />
+        <CreateBlog blogFormRef={blogFormRef} />
       </Togglable>
 
       {blogsSortedByLikes.map((blog) => (
         <Blog
           key={blog.id}
           blog={blog}
-          handleLikeBlog={handleLikeBlog}
-          handleDeleteBlog={handleDeleteBlog}
           creatorIsLoggedIn={user.username === blog.user.username}
         />
       ))}

@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
+import { createBlog } from "../reducers/blogReducer";
+
 import {
   setNotification,
   removeNotification,
 } from "../reducers/notificationReducer";
 
-const CreateBlog = ({ handleCreateBlog }) => {
+const CreateBlog = ({ blogFormRef }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -17,11 +19,12 @@ const CreateBlog = ({ handleCreateBlog }) => {
     event.preventDefault();
 
     try {
-      handleCreateBlog({ title, author, url });
+      dispatch(createBlog({ title, author, url }));
 
       setTitle("");
       setAuthor("");
       setUrl("");
+      blogFormRef.current.toggleVisibility();
       dispatch(
         setNotification({
           type: "success",
