@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Blog from "./components/Blog";
 import Login from "./components/Login";
@@ -15,17 +15,20 @@ import {
   removeNotification,
 } from "./reducers/notificationReducer";
 
+import { initializeBlogs, createBlog } from "./reducers/blogReducer";
+
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
+
+  const blogs = useSelector((store) => store.blogs || []);
 
   const blogFormRef = useRef();
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
@@ -59,20 +62,19 @@ const App = () => {
   };
 
   const handleCreateBlog = async (blogObject) => {
-    const savedBlog = await blogService.create(blogObject);
-    setBlogs([...blogs, savedBlog]);
+    dispatch(createBlog(blogObject));
     blogFormRef.current.toggleVisibility();
   };
 
   const handleLikeBlog = async (blogId, newBlog) => {
-    const updatedBlog = await blogService.update(blogId, newBlog);
-    setBlogs(blogs.map((blog) => (blog.id !== blogId ? blog : updatedBlog)));
+    // const updatedBlog = await blogService.update(blogId, newBlog);
+    // setBlogs(blogs.map((blog) => (blog.id !== blogId ? blog : updatedBlog)));
   };
 
   const handleDeleteBlog = async (blog) => {
-    const blogId = blog.id;
-    await blogService.remove(blogId);
-    setBlogs(blogs.filter((blog) => blog.id !== blogId));
+    // const blogId = blog.id;
+    // await blogService.remove(blogId);
+    // setBlogs(blogs.filter((blog) => blog.id !== blogId));
   };
 
   const blogsSortedByLikes = blogs.sort(
