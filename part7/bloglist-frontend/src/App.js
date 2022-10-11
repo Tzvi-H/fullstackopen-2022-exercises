@@ -25,9 +25,7 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => {
-      dispatch(initializeBlogs(blogs));
-    });
+    dispatch(initializeBlogs());
   }, [dispatch]);
 
   useEffect(() => {

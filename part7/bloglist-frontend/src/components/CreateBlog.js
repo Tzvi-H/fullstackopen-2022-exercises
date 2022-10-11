@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addBlog } from "../reducers/blogReducer";
+import { createBlog } from "../reducers/blogReducer";
 
 import {
   setNotification,
   removeNotification,
 } from "../reducers/notificationReducer";
-import blogService from "../services/blogs";
 
 const CreateBlog = ({ blogFormRef }) => {
   const [title, setTitle] = useState("");
@@ -19,8 +18,7 @@ const CreateBlog = ({ blogFormRef }) => {
     event.preventDefault();
 
     try {
-      const newBlog = await blogService.create({ title, author, url });
-      dispatch(addBlog(newBlog));
+      dispatch(createBlog({ title, author, url }));
 
       setTitle("");
       setAuthor("");

@@ -13,17 +13,23 @@ const blogReducer = (state = [], action) => {
   }
 };
 
-export const initializeBlogs = (blogs) => {
-  return {
-    type: "INIT_BLOGS",
-    data: blogs,
+export const initializeBlogs = () => {
+  return async (dispatch) => {
+    const blogs = await blogService.getAll();
+    dispatch({
+      type: "INIT_BLOGS",
+      data: blogs,
+    });
   };
 };
 
-export const addBlog = (blog) => {
-  return {
-    type: "ADD_BLOG",
-    data: blog,
+export const createBlog = (blogObject) => {
+  return async (dispatch) => {
+    const newBlog = await blogService.create(blogObject);
+    dispatch({
+      type: "ADD_BLOG",
+      data: newBlog,
+    });
   };
 };
 
