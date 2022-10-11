@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import Blog from "./components/Blog";
+import Blogs from "./components/Blogs";
 import Login from "./components/Login";
 import CreateBlog from "./components/CreateBlog";
 import Notification from "./components/Notification";
@@ -20,14 +20,14 @@ import { initializeBlogs } from "./reducers/blogReducer";
 const App = () => {
   const [user, setUser] = useState(null);
 
-  const blogs = useSelector((store) => store.blogs || []);
-
   const blogFormRef = useRef();
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(initializeBlogs());
+    blogService.getAll().then((blogs) => {
+      dispatch(initializeBlogs(blogs));
+    });
   }, [dispatch]);
 
   useEffect(() => {
@@ -61,10 +61,6 @@ const App = () => {
     }, 3000);
   };
 
-  const blogsSortedByLikes = blogs.sort(
-    (blogA, blogB) => blogB.likes - blogA.likes
-  );
-
   if (user === null) {
     return (
       <div>
@@ -87,13 +83,7 @@ const App = () => {
         <CreateBlog blogFormRef={blogFormRef} />
       </Togglable>
 
-      {blogsSortedByLikes.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          creatorIsLoggedIn={user.username === blog.user.username}
-        />
-      ))}
+      <Blogs user={user} />
     </div>
   );
 };
