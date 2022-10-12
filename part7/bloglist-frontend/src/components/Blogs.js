@@ -1,10 +1,12 @@
 import Blog from "./Blog";
 import { useSelector } from "react-redux";
 
-const Blogs = ({ user }) => {
+const Blogs = () => {
   const blogs = useSelector((state) =>
     state.blogs.sort((blogA, blogB) => blogB.likes - blogA.likes)
   );
+
+  const user = useSelector((state) => state.user);
 
   return (
     <div>
@@ -12,8 +14,6 @@ const Blogs = ({ user }) => {
         <Blog
           key={blog.id}
           blog={blog}
-          // handleLikeBlog={handleLikeBlog}
-          // handleDeleteBlog={handleDeleteBlog}
           creatorIsLoggedIn={user.username === blog.user.username}
         />
       ))}
