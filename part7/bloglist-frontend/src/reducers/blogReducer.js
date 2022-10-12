@@ -8,6 +8,10 @@ const blogReducer = (state = [], action) => {
       return action.data;
     case "ADD_BLOG":
       return [...state, action.data];
+    case "UPDATE_BLOG":
+      return state.map((blog) =>
+        blog.id !== action.data.id ? blog : action.data
+      );
     default:
       return state;
   }
@@ -33,7 +37,7 @@ export const createBlog = (blogObject) => {
   };
 };
 
-export const updateblog = (blogId, newObject) => {
+export const updateblog = (blogId, newObject, title) => {
   return async (dispatch) => {
     const updatedBlog = await blogService.update(blogId, newObject);
     dispatch({
@@ -43,7 +47,7 @@ export const updateblog = (blogId, newObject) => {
     dispatch(
       setNotification({
         type: "success",
-        message: `successfully liked "${newObject.title}"`,
+        message: `successfully liked "${title}"`,
       })
     );
     setTimeout(() => {

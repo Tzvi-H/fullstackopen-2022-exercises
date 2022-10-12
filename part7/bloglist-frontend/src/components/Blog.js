@@ -27,9 +27,8 @@ const Blog = ({ blog, creatorIsLoggedIn }) => {
 
   const handleCreateButtonClick = () => {
     try {
-      dispatch(updateblog(blog.id, { likes: blog.likes + 1 }));
+      dispatch(updateblog(blog.id, { likes: blog.likes + 1 }, blog.title));
     } catch (error) {
-      console.log(error);
       setNotification({ type: "error", message: error.response.data.error });
       setTimeout(() => {
         dispatch(removeNotification());
