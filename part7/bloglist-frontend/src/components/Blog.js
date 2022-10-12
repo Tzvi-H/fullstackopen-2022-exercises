@@ -50,7 +50,7 @@ const Blog = ({ blog, creatorIsLoggedIn }) => {
         })
       );
       setTimeout(() => {
-        dispatch(setNotification());
+        dispatch(removeNotification());
       }, 3000);
     } catch (error) {
       dispatch(
