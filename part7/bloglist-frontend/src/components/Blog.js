@@ -84,6 +84,12 @@ const Blog = () => {
       likes {blog.likes} <button onClick={handleLikeButtonClick}>like</button>
       <br />
       <p>added by {blog.author}</p>
+      <h3>comments</h3>
+      <ul>
+        {blog.comments.map((comment) => (
+          <li key={comment}>{comment}</li>
+        ))}
+      </ul>
     </div>
     // <div style={blogStyle} className="blog">
     //   <Link to={`/blogs/${blog.id}`}>

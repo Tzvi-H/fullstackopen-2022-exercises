@@ -24,5 +24,13 @@ Content-Type: application/json
 }
 
 ###
-DELETE  http://localhost:3003/api/blogs/6324e3803bcc33b5e4a03966
+DELETE  http://localhost:3003/api/blogs/634848b50b72b59b97863351
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMyIsImlkIjoiNjMyNGUwZGFlNGJmMmEyMzI1NjU1YWE5IiwiaWF0IjoxNjYzNTM3OTEyfQ.SRCaxhRBy8wNJHaXLgB_MJCBnUW7XaVsePCsnAW0Y-w
+
+###
+POST http://localhost:3003/api/blogs/63484a970b72b59b9786338b/comments
+Content-Type: application/json
+
+{
+  "comment": "this is another comment"
+}

@@ -78,4 +78,23 @@ blogsRouter.put("/:id", async (request, response) => {
   }
 });
 
+blogsRouter.post("/:id/comments", async (request, response) => {
+  if (!request.body.comment) {
+    return response.status(400).json({
+      error: "comment is missing",
+    });
+  }
+
+  const blog = await Blog.findById(request.params.id);
+
+  if (!blog) {
+    return response.status(404).end();
+  }
+
+  blog.comments.push(request.body.comment);
+
+  const result = await blog.save();
+  response.status(201).json(result);
+});
+
 module.exports = blogsRouter;
