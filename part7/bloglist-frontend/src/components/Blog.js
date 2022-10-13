@@ -1,7 +1,10 @@
-import { useState } from "react";
-import PropTypes from "prop-types";
+// import { useState } from "react";
+// import PropTypes from "prop-types";
 
-import { updateblog, deleteBlog } from "../reducers/blogReducer";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+
+import { updateblog } from "../reducers/blogReducer";
 
 import { useDispatch } from "react-redux";
 
@@ -10,22 +13,31 @@ import {
   removeNotification,
 } from "../reducers/notificationReducer";
 
-const Blog = ({ blog, creatorIsLoggedIn }) => {
-  const [showDetails, setShowDetails] = useState(false);
-
+const Blog = () => {
   const dispatch = useDispatch();
 
-  const showWhenVisible = { display: showDetails ? "" : "none" };
+  const blogId = useParams().id;
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-  };
+  const blog = useSelector((state) =>
+    state.blogs.find((blog) => blog.id === blogId)
+  );
 
-  const handleCreateButtonClick = () => {
+  if (!blog) {
+    return null;
+  }
+  // const [showDetails, setShowDetails] = useState(false);
+
+  // const showWhenVisible = { display: showDetails ? "" : "none" };
+
+  // const blogStyle = {
+  //   paddingTop: 10,
+  //   paddingLeft: 2,
+  //   border: "solid",
+  //   borderWidth: 1,
+  //   marginBottom: 5,
+  // };
+
+  const handleLikeButtonClick = () => {
     try {
       dispatch(updateblog(blog.id, { likes: blog.likes + 1 }, blog.title));
     } catch (error) {
@@ -36,38 +48,50 @@ const Blog = ({ blog, creatorIsLoggedIn }) => {
     }
   };
 
-  const handleDeleteButtonClick = () => {
-    if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      return;
-    }
+  // const handleDeleteButtonClick = () => {
+  //   if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+  //     return;
+  //   }
 
-    try {
-      dispatch(deleteBlog(blog.id));
-      dispatch(
-        setNotification({
-          type: "success",
-          message: `successfully deleted "${blog.title}"`,
-        })
-      );
-      setTimeout(() => {
-        dispatch(removeNotification());
-      }, 3000);
-    } catch (error) {
-      dispatch(
-        setNotification({ type: "error", message: error.response.data.error })
-      );
-      setTimeout(() => {
-        dispatch(removeNotification());
-      }, 3000);
-    }
-  };
+  //   try {
+  //     dispatch(deleteBlog(blog.id));
+  //     dispatch(
+  //       setNotification({
+  //         type: "success",
+  //         message: `successfully deleted "${blog.title}"`,
+  //       })
+  //     );
+  //     setTimeout(() => {
+  //       dispatch(removeNotification());
+  //     }, 3000);
+  //   } catch (error) {
+  //     dispatch(
+  //       setNotification({ type: "error", message: error.response.data.error })
+  //     );
+  //     setTimeout(() => {
+  //       dispatch(removeNotification());
+  //     }, 3000);
+  //   }
+  // };
 
-  const buttonText = showDetails ? "hide" : "view";
+  // const buttonText = showDetails ? "hide" : "view";
 
   return (
-    <div style={blogStyle} className="blog">
-      {blog.title}: {blog.author}{" "}
-      <button onClick={() => setShowDetails(!showDetails)}>{buttonText}</button>
+    <div>
+      <h2>{blog.title}</h2>
+      <a href={blog.url}>{blog.url}</a>
+      <br />
+      likes {blog.likes} <button onClick={handleLikeButtonClick}>like</button>
+      <br />
+      <p>added by {blog.author}</p>
+    </div>
+    // <div style={blogStyle} className="blog">
+    //   <Link to={`/blogs/${blog.id}`}>
+    //     {blog.title}: {blog.author}{" "}
+    //   </Link>
+
+    // {
+    /* <button onClick={() => setShowDetails(!showDetails)}>{buttonText}</button>
       <div style={showWhenVisible} className="togglable-info">
         {blog.url}
         <br />
@@ -79,13 +103,14 @@ const Blog = ({ blog, creatorIsLoggedIn }) => {
         {creatorIsLoggedIn && (
           <button onClick={handleDeleteButtonClick}>remove</button>
         )}
-      </div>
-    </div>
+      </div> */
+    // }
+    // </div>
   );
 };
 
-Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-};
+// Blog.propTypes = {
+//   blog: PropTypes.object.isRequired,
+// };
 
 export default Blog;
