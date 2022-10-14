@@ -1,10 +1,7 @@
-// import { useState } from "react";
-// import PropTypes from "prop-types";
-
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import { updateblog } from "../reducers/blogReducer";
+import { updateblog, addCommentToBlog } from "../reducers/blogReducer";
 
 import { useDispatch } from "react-redux";
 
@@ -25,17 +22,6 @@ const Blog = () => {
   if (!blog) {
     return null;
   }
-  // const [showDetails, setShowDetails] = useState(false);
-
-  // const showWhenVisible = { display: showDetails ? "" : "none" };
-
-  // const blogStyle = {
-  //   paddingTop: 10,
-  //   paddingLeft: 2,
-  //   border: "solid",
-  //   borderWidth: 1,
-  //   marginBottom: 5,
-  // };
 
   const handleLikeButtonClick = () => {
     try {
@@ -48,33 +34,13 @@ const Blog = () => {
     }
   };
 
-  // const handleDeleteButtonClick = () => {
-  //   if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-  //     return;
-  //   }
+  const handleNewCommentSubmit = (event) => {
+    event.preventDefault();
+    const comment = event.target.comment.value;
+    event.target.comment.value = "";
 
-  //   try {
-  //     dispatch(deleteBlog(blog.id));
-  //     dispatch(
-  //       setNotification({
-  //         type: "success",
-  //         message: `successfully deleted "${blog.title}"`,
-  //       })
-  //     );
-  //     setTimeout(() => {
-  //       dispatch(removeNotification());
-  //     }, 3000);
-  //   } catch (error) {
-  //     dispatch(
-  //       setNotification({ type: "error", message: error.response.data.error })
-  //     );
-  //     setTimeout(() => {
-  //       dispatch(removeNotification());
-  //     }, 3000);
-  //   }
-  // };
-
-  // const buttonText = showDetails ? "hide" : "view";
+    dispatch(addCommentToBlog(blog.id, comment));
+  };
 
   return (
     <div>
@@ -85,38 +51,17 @@ const Blog = () => {
       <br />
       <p>added by {blog.author}</p>
       <h3>comments</h3>
+      <form onSubmit={handleNewCommentSubmit}>
+        <input type="text" name="comment" />
+        <button>add comment</button>
+      </form>
       <ul>
         {blog.comments.map((comment) => (
           <li key={comment}>{comment}</li>
         ))}
       </ul>
     </div>
-    // <div style={blogStyle} className="blog">
-    //   <Link to={`/blogs/${blog.id}`}>
-    //     {blog.title}: {blog.author}{" "}
-    //   </Link>
-
-    // {
-    /* <button onClick={() => setShowDetails(!showDetails)}>{buttonText}</button>
-      <div style={showWhenVisible} className="togglable-info">
-        {blog.url}
-        <br />
-        likes {blog.likes}{" "}
-        <button onClick={handleCreateButtonClick}>like</button>
-        <br />
-        {blog.user.username}
-        <br />
-        {creatorIsLoggedIn && (
-          <button onClick={handleDeleteButtonClick}>remove</button>
-        )}
-      </div> */
-    // }
-    // </div>
   );
 };
-
-// Blog.propTypes = {
-//   blog: PropTypes.object.isRequired,
-// };
 
 export default Blog;

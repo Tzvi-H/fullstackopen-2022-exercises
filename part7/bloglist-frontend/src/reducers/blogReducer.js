@@ -68,4 +68,23 @@ export const deleteBlog = (blogId) => {
   };
 };
 
+export const addCommentToBlog = (blogId, comment) => {
+  return async (dispatch) => {
+    const updatedBlog = await blogService.addComment(blogId, comment);
+    dispatch({
+      type: "UPDATE_BLOG",
+      data: updatedBlog,
+    });
+    dispatch(
+      setNotification({
+        type: "success",
+        message: `successfully liked "${updatedBlog.title}"`,
+      })
+    );
+    setTimeout(() => {
+      dispatch(removeNotification());
+    }, 3000);
+  };
+};
+
 export default blogReducer;
