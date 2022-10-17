@@ -24,7 +24,6 @@ const Authors = (props) => {
 
     changeAuthor({ variables: { name, setBornTo } });
 
-    event.target.name.value = "";
     event.target.born.value = "";
   };
 
@@ -52,8 +51,13 @@ const Authors = (props) => {
         <h2>Set birthyear</h2>
         <form onSubmit={submitForm}>
           <div>
-            name
-            <input name="name" />
+            <select name="name">
+              {authors.map((author) => (
+                <option key={author.id} value={author.name}>
+                  {author.name}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
             born
