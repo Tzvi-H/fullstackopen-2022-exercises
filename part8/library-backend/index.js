@@ -163,10 +163,8 @@ const resolvers = {
       }
       return newUser;
     },
-    // login(username: String!, password: String!): Token
     login: async (root, args) => {
-      const user = await User.findOne({ username: args.username });
-
+      const user = await User.findOne({ name: args.username });
       if (!user || args.password !== "secret") {
         throw new UserInputError("wrong credentials");
       }
