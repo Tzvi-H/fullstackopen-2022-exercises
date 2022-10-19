@@ -4,22 +4,29 @@ import { useState } from "react";
 
 const Books = (props) => {
   const result = useQuery(ALL_BOOKS);
-  const [genre, setGenre] = useState("all");
+  const [genre, setGenre] = useState("");
+
+  const resultFilteredBooks = useQuery(ALL_BOOKS, {
+    variables: {
+      genre,
+    },
+    fetchPolicy: "no-cache",
+  });
 
   if (!props.show) {
     return null;
   }
 
-  if (result.loading) {
+  if (result.loading || resultFilteredBooks.loading) {
     return <div>loading...</div>;
   }
 
   const books = result.data.allBooks;
 
-  const filteredBooks =
-    genre === "all"
-      ? books
-      : books.filter((book) => book.genres.includes(genre));
+  const filteredBooks = resultFilteredBooks.data.allBooks;
+  // genre === "all"
+  //   ? books
+  //   : books.filter((book) => book.genres.includes(genre));
 
   const allGenres = [...new Set(books.map((book) => book.genres).flat())];
 
@@ -48,7 +55,7 @@ const Books = (props) => {
           {genre}
         </button>
       ))}
-      <button onClick={() => setGenre("all")}>all genres</button>
+      <button onClick={() => setGenre("")}>all genres</button>
     </div>
   );
 };
