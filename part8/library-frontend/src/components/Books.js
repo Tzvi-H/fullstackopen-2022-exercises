@@ -10,7 +10,6 @@ const Books = (props) => {
     variables: {
       genre,
     },
-    fetchPolicy: "no-cache",
   });
 
   if (!props.show) {

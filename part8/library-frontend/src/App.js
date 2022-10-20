@@ -1,6 +1,8 @@
 import { useState } from "react";
 
-import { useApolloClient } from "@apollo/client";
+import { useSubscription, useApolloClient } from "@apollo/client";
+
+import { ALL_BOOKS, BOOK_ADDED } from "./queries";
 
 import Authors from "./components/Authors";
 import Books from "./components/Books";
@@ -15,6 +17,19 @@ const App = () => {
   );
 
   const client = useApolloClient();
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const addedBook = subscriptionData.data.bookAdded;
+      alert(`new book with title ${addedBook.title} just added`);
+      client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+        console.log(allBooks, addedBook);
+        return {
+          allBooks: allBooks.concat(addedBook),
+        };
+      });
+    },
+  });
 
   const logout = () => {
     setToken(null);
