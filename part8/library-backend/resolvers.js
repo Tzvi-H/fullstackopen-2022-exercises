@@ -19,7 +19,7 @@ const resolvers = {
 
       return await Book.find({});
     },
-    allAuthors: async () => Author.find({}),
+    allAuthors: async () => Author.find({}).populate("books"),
     me: (root, args, context) => context.currentUser,
   },
 
@@ -28,7 +28,7 @@ const resolvers = {
   },
 
   Author: {
-    bookCount: async (root) => Book.count({ author: root._id }),
+    bookCount: (root) => root.books.length,
   },
 
   Mutation: {
@@ -57,6 +57,8 @@ const resolvers = {
 
       try {
         await newBook.save();
+        bookAuthor.books = bookAuthor.books.concat(newBook);
+        await bookAuthor.save();
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args,
