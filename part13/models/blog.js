@@ -1,19 +1,9 @@
-const { Model, DataTypes, Sequelize } = require("sequelize");
+const { Model, DataTypes } = require("sequelize");
 
-const user = process.env.user;
-const host = process.env.host;
-const database = process.env.database;
-const password = process.env.password;
-const port = process.env.port;
-
-const sequelize = new Sequelize(database, user, password, {
-  host,
-  port,
-  dialect: "postgres",
-  logging: false,
-});
+const { sequelize } = require("../utils/db");
 
 class Blog extends Model {}
+
 Blog.init(
   {
     id: {
@@ -44,7 +34,5 @@ Blog.init(
     modelName: "blog",
   }
 );
-
-Blog.sync();
 
 module.exports = Blog;
