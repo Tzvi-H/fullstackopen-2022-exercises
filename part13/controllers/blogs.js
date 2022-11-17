@@ -12,18 +12,20 @@ blogsRouter.get("/", async (req, res) => {
 });
 
 blogsRouter.post("/", async (req, res) => {
-  try {
-    const blog = await Blog.create(req.body);
-    res.json(blog);
-  } catch (error) {
-    res.status(400).json(error);
-  }
+  const blog = await Blog.create(req.body);
+  res.json(blog);
 });
 
-blogsRouter.put("/:id", blogFinder, async (req, res) => {
+blogsRouter.put("/:id", blogFinder, async (req, res, next) => {
   const blog = req.blog;
 
   if (blog) {
+    if (isNaN(req.body.likes)) {
+      next({
+        name: "InvalidLikesProperty",
+        message: "likes must contain a valid number",
+      });
+    }
     blog.likes = req.body.likes;
     await blog.save();
     res.json(blog);
