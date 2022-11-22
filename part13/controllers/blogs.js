@@ -36,14 +36,18 @@ blogsRouter.put("/:id", blogFinder, async (req, res, next) => {
   }
 });
 
-blogsRouter.delete("/:id", blogFinder, async (req, res) => {
+blogsRouter.delete("/:id", tokenExtractor, blogFinder, async (req, res) => {
   const blog = req.blog;
+  const user = await User.findByPk(req.decodedToken.id);
 
-  if (blog) {
+  if (!blog) {
+    res.status(404).end();
+  } else if (blog.userId !== user.id) {
+    res.status(401).end();
+  } else {
     await blog.destroy();
+    res.status(204).end();
   }
-
-  res.status(204).end();
 });
 
 module.exports = blogsRouter;
