@@ -8,7 +8,7 @@ const blogFinder = async (req, res, next) => {
 };
 
 blogsRouter.get("/", async (req, res) => {
-  const blogs = await Blog.findAll({});
+  const blogs = await Blog.findAll({ include: User });
   res.json(blogs);
 });
 
