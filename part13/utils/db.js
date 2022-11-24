@@ -5,7 +5,7 @@ const sequelize = new Sequelize(database, user, password, {
   host,
   port: db_port,
   dialect: "postgres",
-  logging: false,
+  logging: true,
 });
 
 const connectToDatabase = async () => {
