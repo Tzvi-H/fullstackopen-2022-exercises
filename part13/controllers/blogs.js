@@ -24,7 +24,11 @@ blogsRouter.get("/", async (req, res) => {
     ];
   }
 
-  const blogs = await Blog.findAll({ include: User, where });
+  const blogs = await Blog.findAll({
+    include: User,
+    order: [["likes", "DESC"]],
+    where,
+  });
   res.json(blogs);
 });
 
